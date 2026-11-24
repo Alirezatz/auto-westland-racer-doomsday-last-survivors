@@ -60,7 +60,7 @@ dotnet build .\WestlandRacerMod.csproj -c Release -p:DeployToMods=false
 dotnet build .\WestlandRacerMod.csproj -c Release -p:GameDir="D:\SteamLibrary\steamapps\common\Doomsday Last Survivors" -p:DeployToMods=false
 ```
 
-فایل ساخته‌شده در `bin\Release\WestlandRacerMod.dll` قرار می‌گیرد. گزینهٔ `DeployToMods=false` از کپی خودکار مود به پوشهٔ بازی جلوگیری می‌کند. برای اجرای مود، DLL خروجی را به پوشهٔ `Mods` بازی منتقل کنید؛ DLLهای MelonLoader، Unity و خود بازی را کنار آن کپی نکنید.
+فایل ساخته‌شده در `bin\Release\win-x64\WestlandRacerMod.dll` قرار می‌گیرد. گزینهٔ `DeployToMods=false` از کپی خودکار مود به پوشهٔ بازی جلوگیری می‌کند. برای اجرای مود، DLL خروجی را به پوشهٔ `Mods` بازی منتقل کنید؛ DLLهای MelonLoader، Unity و خود بازی را کنار آن کپی نکنید.
 
 ## آزمون منطق کارت‌ها
 
