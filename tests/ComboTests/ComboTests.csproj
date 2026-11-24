@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>WestlandRacerLogicTests</AssemblyName>
+    <RootNamespace>WestlandRacerLogicTests</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <!-- The AI's actual decision logic, compiled straight from the mod source. -->
+    <Compile Include="..\..\src\GameConfig.cs" />
+    <Compile Include="..\..\src\ComboEvaluator.cs" />
+  </ItemGroup>
+
+</Project>
