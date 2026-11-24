@@ -1,81 +1,81 @@
 # Auto Westland Racer Doomsday Last Survivors
 
-> **این پروژه کامل نیست و هنوز جای توسعه دارد.** هرکسی می‌تواند آن را بررسی کند، کامل‌تر و بهتر کند و متناسب با نیاز خودش تغییر دهد. این مخزن مجوز (License) جداگانه‌ای ندارد.
+> **This project is incomplete and still has room to grow.** Anyone can explore it, finish missing parts, improve it, and adapt it for their own use. No separate license is included in this repository.
 
-این پروژه یک مود آزمایشی برای بخش **Wasteland Racer** بازی **Doomsday: Last Survivors** است. مود با MelonLoader اجرا می‌شود و در جریان مسابقه انتخاب خودرو، بازی کارت‌ها و استفاده از آیتم‌ها را خودکار می‌کند.
+This is an experimental mod for the **Wasteland Racer** event in **Doomsday: Last Survivors**. It runs with MelonLoader and automates car selection, card plays, and item use during races.
 
-## وضعیت و سازگاری
+## Status and compatibility
 
-- پروژه و رفتار مود کامل یا تضمین‌شده نیستند؛ ممکن است با به‌روزرسانی بازی یا MelonLoader نیاز به اصلاح داشته باشند.
-- کد بر اساس اسمبلی‌های بازی نسخهٔ `1.63.0` و Unity `2022.3.62f2` نوشته شده است.
-- هدف ساخت، `net6.0` و `x64` است؛ پروژه از MelonLoader `0.7.3` استفاده می‌کند.
-- این مخزن فایل‌های DLL بازی یا MelonLoader را نگه نمی‌دارد. برای ساخت، نسخهٔ نصب‌شدهٔ بازی باید در دسترس باشد.
+- The project and mod behavior are not complete or guaranteed; game or MelonLoader updates may require changes.
+- The code targets game assemblies from version `1.63.0` and Unity `2022.3.62f2`.
+- The build target is `net6.0` and `x64`; the project uses MelonLoader `0.7.3`.
+- Game and MelonLoader DLLs are not stored in this repository. A local game installation is required to build the mod.
 
-## طرز کار
+## How it works
 
-مود از `MelonMod` آغاز می‌شود و هر فریم، با فاصلهٔ قابل تنظیم، وضعیت مسابقه را از cacheهای بازی می‌خواند. `RaceApi` اطلاعات بازیکنان، کارت‌ها، خودروها، آیتم‌ها و مرحلهٔ مسابقه را به یک snapshot ساده تبدیل می‌کند. `RacerBrain` بر اساس مرحلهٔ انتخاب خودرو، انتظار، مسابقه یا پایان، حداکثر یک درخواست در هر نوبت تصمیم‌گیری می‌فرستد.
+The mod starts from `MelonMod` and periodically reads the game's cached race state. `RaceApi` copies player, card, car, item, and race-stage data into a managed snapshot. `RacerBrain` uses the current phase—car selection, waiting, racing, or end—to decide which request to send, with at most one action per decision interval.
 
-برای ارسال درخواست‌ها از API عمومی خود ماژول مسابقهٔ بازی استفاده می‌شود؛ مود برای این کار بستهٔ شبکه‌ای نمی‌سازد. پچ‌های Harmony پاسخ‌های سرور را فقط برای مشاهده ثبت می‌کنند تا مود در صورت رد شدن درخواست، مکث کند یا انتخاب دیگری را امتحان کند.
+Requests go through the game's public race-module API; the mod does not construct network packets. Harmony patches observe server replies so the mod can pause or retry with another choice when a request is rejected.
 
-### انتخاب کارت و آیتم
+### Cards and items
 
-- `ComboEvaluator` ترکیب‌های مجاز کارت را از دست بازیکن پیدا و بر اساس ارزش تخمینی مرتب می‌کند؛ در صورت نیاز کارت کم‌فایده‌تر را برای بازی تک‌کارت انتخاب می‌کند.
-- حالت Smart Play می‌تواند کارت تک را هنگام پیشتازی یا نزدیک ایستگاه تدارکات نگه دارد و در پایان مسیر یا هنگام عقب‌بودن، کارت‌ها را سریع‌تر بازی کند.
-- خودروها به ترتیب اولویت Dickey Z4، Bourbon 1500 و Beetle انتخاب می‌شوند.
-- استفاده از آیتم‌های پولی با Sprint Token به‌طور پیش‌فرض خاموش است.
+- `ComboEvaluator` finds legal card combinations in the player's hand and ranks them by estimated value. When playing a single card, it can choose a less useful card to discard.
+- Smart Play can hold a single card while leading or near a supply station, and play cards more aggressively near the finish or while behind.
+- Cars are prioritized in this order: Dickey Z4, Bourbon 1500, then Beetle.
+- Paid props that use Sprint Tokens are disabled by default.
 
-## تنظیمات داخل بازی
+## In-game settings
 
-کلید **F9** پنل مود را باز و بسته می‌کند. از پنل می‌توان اجرای هوش مصنوعی، انتخاب خودرو، بازی کارت، استفاده از آیتم‌ها، Smart Play و گزینه‌های دیگر را تغییر داد.
+Press **F9** to show or hide the mod panel. The panel controls the master switch, car selection, card play, item use, Smart Play, and other settings.
 
-- اجرای خودکار درون مسابقه به‌طور پیش‌فرض روشن است.
-- **Auto match** به‌طور پیش‌فرض خاموش است. روشن‌کردن آن باعث ارسال خودکار درخواست ورود به مسابقه می‌شود و هر مسابقهٔ پذیرفته‌شده یک **Racer Pass** مصرف می‌کند.
-- استفاده از آیتم‌های پولی با Sprint Token به‌طور پیش‌فرض خاموش است.
+- In-race automation is enabled by default.
+- **Auto match** is disabled by default. Enabling it sends match-entry requests automatically; each accepted match consumes one **Racer Pass**.
+- Paid props that use Sprint Tokens are disabled by default.
 
-## پیش‌نیازهای ساخت
+## Build requirements
 
-1. Windows و .NET SDK 6 یا جدیدتر.
-2. نسخهٔ PC بازی روی Steam.
-3. MelonLoader نصب‌شده در پوشهٔ بازی؛ مسیر پیش‌فرض در پروژه:
+1. Windows and .NET SDK 6 or later.
+2. The PC version of the game installed through Steam.
+3. MelonLoader installed in the game directory. The default path is:
    `C:\Program Files (x86)\Steam\steamapps\common\Doomsday Last Survivors`
 
-پروژه اسمبلی‌های زمان کامپایل را مستقیماً از این مسیرها می‌خواند:
+The project reads compile-time references directly from:
 
 - `MelonLoader\net6`
 - `MelonLoader\Il2CppAssemblies`
 
-این ارجاع‌ها فقط برای کامپایل‌اند و به پوشهٔ خروجی کپی نمی‌شوند. اگر بازی در مسیر دیگری نصب شده، مقدار `GameDir` را به مسیر پوشهٔ بازی تغییر دهید.
+These references are used only during compilation and are not copied to the output directory. If the game is installed elsewhere, pass its directory through the `GameDir` property.
 
-## ساخت
+## Build
 
-در ریشهٔ پروژه اجرا کنید:
+Run this command from the project root:
 
 ```powershell
 dotnet build .\WestlandRacerMod.csproj -c Release -p:DeployToMods=false
 ```
 
-اگر مسیر Steam متفاوت است:
+If Steam is installed in a different location:
 
 ```powershell
 dotnet build .\WestlandRacerMod.csproj -c Release -p:GameDir="D:\SteamLibrary\steamapps\common\Doomsday Last Survivors" -p:DeployToMods=false
 ```
 
-فایل ساخته‌شده در `bin\Release\win-x64\WestlandRacerMod.dll` قرار می‌گیرد. گزینهٔ `DeployToMods=false` از کپی خودکار مود به پوشهٔ بازی جلوگیری می‌کند. برای اجرای مود، DLL خروجی را به پوشهٔ `Mods` بازی منتقل کنید؛ DLLهای MelonLoader، Unity و خود بازی را کنار آن کپی نکنید.
+The output is `bin\Release\win-x64\WestlandRacerMod.dll`. `DeployToMods=false` prevents automatic copying of the mod into the game directory. To use the mod, copy the output DLL into the game's `Mods` folder. Do not copy the MelonLoader, Unity, or game reference DLLs alongside it.
 
-## آزمون منطق کارت‌ها
+## Test card logic
 
 ```powershell
 dotnet run --project .\tests\ComboTests\ComboTests.csproj -c Release
 ```
 
-این آزمون‌ها منطق مستقل انتخاب ترکیب‌ها و کارت‌ها را اجرا می‌کنند و به DLLهای بازی نیاز ندارند.
+These tests exercise the standalone card-combination logic and do not require game DLLs.
 
-## ساختار کد
+## Source layout
 
-- `src\WestlandRacerMod.cs` — نقطهٔ شروع MelonLoader و کلید میانبر پنل.
-- `src\RacerBrain.cs` — ماشین حالت مسابقه و تصمیم‌گیری برای درخواست‌ها.
-- `src\RaceApi.cs` — خواندن cacheهای بازی و فراخوانی API مسابقه.
-- `src\ComboEvaluator.cs` و `src\GameConfig.cs` — ارزیابی کارت‌ها و داده‌های مسابقه.
-- `src\RacerSettings.cs` و `src\RacerUi.cs` — تنظیمات و پنل F9.
-- `src\ReplyPatches.cs` و `src\RacerStats.cs` — مشاهدهٔ پاسخ‌ها و آمار نشست.
-- `tests\ComboTests` — آزمون‌های منطق ترکیب کارت.
+- `src\WestlandRacerMod.cs` — MelonLoader entry point and panel hotkey.
+- `src\RacerBrain.cs` — race state machine and request decisions.
+- `src\RaceApi.cs` — reads game caches and calls the race API.
+- `src\ComboEvaluator.cs` and `src\GameConfig.cs` — card evaluation and race data.
+- `src\RacerSettings.cs` and `src\RacerUi.cs` — settings and the F9 panel.
+- `src\ReplyPatches.cs` and `src\RacerStats.cs` — reply observation and session statistics.
+- `tests\ComboTests` — card-combination logic tests.
